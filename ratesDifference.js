@@ -1,28 +1,5 @@
 'use strict';
 
-const readline = require('readline');
-
-let format = true;
-
-function readRates() {
-  const rl = readline.createInterface({
-    input: process.stdin,
-    output: process.stdout
-  });
-  return new Promise(resolve => {
-    rl.question('Введіть курси акцій по днях, розділяючи їх пробілами: ', rates => {
-      rates = rates.split(' ');
-      const numbers = rates.map(num => {
-        num = Number(num);
-        if(isNaN(num)) format = false;
-        return num;
-      });  
-      rl.close();
-      resolve(numbers);
-    });
-  });
-}
-
 function ratesDifference1(rates) {
   const diffs = [];
   for (let i = 0; i < rates.length; i++) {
@@ -36,7 +13,7 @@ function ratesDifference1(rates) {
       diffs.push(k);
     }
   }
-  console.log(diffs);
+  return diffs;
 }
 
 function ratesDifference2(rates) {
@@ -48,24 +25,7 @@ function ratesDifference2(rates) {
     else diffs.push(i - stack[stack.length - 1]);
     stack.push(i);
   }
-  console.log(diffs);
+  return diffs;
 }
 
-async function start() {
-  let i = 0;
-  let rates;
-  do {
-    format = true;
-    rates = await readRates();
-    i++;
-  } while (i < 3 && !format);
-  if (!format) return;
-  console.time("Перший метод працював ");
-  ratesDifference1(rates);
-  console.timeEnd("Перший метод працював ");
-  console.time("Другий метод працював ");
-  ratesDifference2(rates);
-  console.timeEnd("Другий метод працював ");
-}
-
-start();
+module.exports = { ratesDifference1, ratesDifference2 };
